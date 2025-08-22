@@ -1,18 +1,20 @@
-# AI Email Agent
+# 🤖 AI Email Agent
 
-An intelligent email composition and sending tool that uses AI to draft and send emails based on natural language prompts.
+An intelligent email composition and sending tool that uses AI to draft and send emails based on natural language prompts. Built with Python, Gmail API, and OpenAI GPT models.
 
-## Features
+## ✨ Features
 
-- 🤖 AI-powered email composition using OpenAI GPT models
-- 📧 Gmail integration for sending emails
-- 📝 Natural language prompt processing
-- 🎯 Automatic email parsing and drafting
-- 📎 Support for attachments
-- 📋 Draft creation option
-- 🔄 Rate limiting and retry logic
+- 🤖 **AI-powered email composition** using OpenAI GPT models
+- 📧 **Gmail integration** for sending emails
+- 📝 **Natural language prompt processing** - just describe what you want to send
+- 🎯 **Automatic email parsing and drafting**
+- 📎 **Support for attachments**
+- 📋 **Draft creation option** - create drafts instead of sending
+- 🔄 **Rate limiting and retry logic**
+- 🖥️ **Multiple interfaces**: CLI, interactive mode, and programmatic API
+- 🛡️ **Secure credential management**
 
-## Project Structure
+## 🏗️ Project Structure
 
 ```
 emai_agent_ai/
@@ -21,13 +23,19 @@ emai_agent_ai/
 ├── tools/
 │   ├── gmail_tool.py       # Gmail API integration
 │   └── email_writer.py     # AI email composition
-├── auth_google.py          # Google authentication (legacy)
-├── main.py                 # Main entry point
+├── config.py               # Centralized configuration
+├── main.py                 # Simple entry point
+├── example.py              # Usage examples
+├── cli.py                  # Command-line interface
+├── test_setup.py           # Setup testing
+├── find_credentials.py     # Credentials finder
+├── debug_error.py          # Error debugging
 ├── requirements.txt        # Python dependencies
-└── README.md              # This file
+├── README.md              # This file
+└── .gitignore             # Git ignore rules
 ```
 
-## Setup
+## 🚀 Quick Start
 
 ### 1. Install Dependencies
 
@@ -35,54 +43,94 @@ emai_agent_ai/
 pip install -r requirements.txt
 ```
 
-### 2. Google OAuth Setup
+### 2. Set Up Google OAuth
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or select existing one
 3. Enable Gmail API
 4. Create OAuth 2.0 credentials (Desktop application)
 5. Download the credentials JSON file
-6. Place it in your project directory (update path in `main.py`)
+6. Save it as `google_crediential.json` in your project directory
 
-### 3. OpenAI API Setup
+### 3. Configure OpenAI API
 
-Set your OpenAI API credentials in `main.py` or as environment variables:
+Update `config.py` with your OpenAI API credentials:
 
 ```python
-os.environ["OPENAI_API_KEY"] = "your-api-key"
-os.environ["OPENAI_API_BASE"] = "https://api.aimlapi.com/v1"  # Optional
+OPENAI_API_KEY = "your-openai-api-key"
+OPENAI_API_BASE = "https://api.aimlapi.com/v1"  # Optional
 ```
 
-## Usage
+### 4. Test Setup
 
-### Basic Usage
+```bash
+python test_setup.py
+```
+
+### 5. Run the Email Agent
+
+```bash
+# Simple usage
+python main.py
+
+# Interactive CLI
+python cli.py --interactive
+
+# Send a specific email
+python cli.py "Send a professional email to john@example.com about the meeting tomorrow"
+```
+
+## 📖 Usage Examples
+
+### Command Line Interface
+
+```bash
+# Send an email
+python cli.py "Send a professional email to client@company.com about project updates"
+
+# Create a draft
+python cli.py "Draft a friendly email to friend@gmail.com inviting them to dinner"
+
+# Interactive mode
+python cli.py --interactive
+
+# Verbose output
+python cli.py --verbose "Send email to john@example.com"
+```
+
+### Programmatic Usage
 
 ```python
 from agent.email_agent import EmailAgent
+from config import setup_environment, get_google_credentials_path, get_token_path
+
+# Set up environment
+setup_environment()
 
 # Initialize the agent
 agent = EmailAgent(
-    client_secret_path="path/to/your/credentials.json",
-    token_path="token.json"
+    client_secret_path=get_google_credentials_path(),
+    token_path=get_token_path()
 )
 
 # Send an email
 result = agent.run("Write an email to john@example.com about the meeting tomorrow")
+
+if result["ok"]:
+    print(f"✅ Email sent to {result['to']}")
+    print(f"📋 Subject: {result['subject']}")
+else:
+    print(f"❌ Error: {result['error']}")
 ```
 
-### Command Line Usage
+### Example Prompts
 
-```bash
-python main.py
-```
+- `"Send a professional email to client@company.com about project updates"`
+- `"Draft a friendly email to friend@gmail.com inviting them to dinner"`
+- `"Write a formal email to hr@company.com requesting vacation days"`
+- `"Send an email to team@company.com about the new CI/CD pipeline, cc manager@company.com"`
 
-## Example Prompts
-
-- "Send a professional email to client@company.com about project updates"
-- "Draft a friendly email to friend@gmail.com inviting them to dinner"
-- "Write a formal email to hr@company.com requesting vacation days"
-
-## Configuration
+## ⚙️ Configuration
 
 ### Environment Variables
 
@@ -93,11 +141,11 @@ python main.py
 
 ### File Paths
 
-Update these paths in `main.py`:
-- `client_secret_path`: Path to your Google OAuth credentials
-- `token_path`: Path to store the OAuth token
+Update these paths in `config.py`:
+- `GOOGLE_CREDENTIALS_PATH`: Path to your Google OAuth credentials
+- `TOKEN_PATH`: Path to store the OAuth token
 
-## Features
+## 🔧 Features
 
 ### Email Parsing
 The agent automatically extracts:
@@ -121,22 +169,38 @@ The agent automatically extracts:
 - Automatic token refresh
 - Draft creation support
 
-## Error Handling
+## 🛠️ Development
 
-The agent includes comprehensive error handling for:
-- Missing recipient emails
-- API rate limits
-- Authentication failures
-- File attachment issues
+### Testing
 
-## Security Notes
+```bash
+# Run setup tests
+python test_setup.py
+
+# Find credentials file
+python find_credentials.py
+
+# Debug errors
+python debug_error.py
+```
+
+### Project Structure
+
+- **`agent/`**: Main agent logic
+- **`tools/`**: Utility functions for Gmail and AI
+- **`config.py`**: Centralized configuration
+- **`cli.py`**: Command-line interface
+- **`main.py`**: Simple entry point
+
+## 🔒 Security Notes
 
 - Never commit your API keys or credentials to version control
 - Use environment variables for sensitive data
 - Keep your OAuth token secure
 - Regularly rotate your API keys
+- The `.gitignore` file protects sensitive files
 
-## Troubleshooting
+## 🐛 Troubleshooting
 
 ### Common Issues
 
@@ -148,11 +212,31 @@ The agent includes comprehensive error handling for:
 ### Getting Help
 
 If you encounter issues:
-1. Check the console output for error messages
-2. Verify all file paths are correct
-3. Ensure all dependencies are installed
-4. Check your internet connection
+1. Run `python test_setup.py` to check your setup
+2. Run `python find_credentials.py` to locate credentials
+3. Run `python debug_error.py` for detailed error information
+4. Check the console output for error messages
 
-## License
+## 📝 License
 
 This project is for educational and personal use. Please respect the terms of service for both Google Gmail API and OpenAI API.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📞 Support
+
+If you need help:
+1. Check the troubleshooting section
+2. Run the debugging tools
+3. Review the configuration
+4. Ensure all dependencies are installed
+
+---
+
+**Made with ❤️ using Python, Gmail API, and OpenAI**
